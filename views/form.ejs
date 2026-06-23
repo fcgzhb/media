@@ -1,0 +1,35 @@
+<div class="mb-3">
+  <h4 class="fw-bold"><%= isEdit ? '编辑' : '新建' %> - <%= title %></h4>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form method="POST" action="<%= formAction %>">
+      <div class="row g-3">
+        <% formFields.forEach(function(f) { %>
+        <div class="col-md-<%= f.col || 6 %>">
+          <label class="form-label"><%= f.label %><% if (f.required) { %><span class="text-danger"> *</span><% } %></label>
+          <% if (f.type === 'select') { %>
+          <select name="<%= f.name %>" class="form-select">
+            <option value="">请选择</option>
+            <% f.options.forEach(function(opt) { %>
+            <option value="<%= opt %>" <% if (row[f.name] === opt) { %>selected<% } %>><%= opt %></option>
+            <% }) %>
+          </select>
+          <% } else if (f.type === 'textarea') { %>
+          <textarea name="<%= f.name %>" class="form-control" rows="3" <% if (f.required) { %>required<% } %>><%= row[f.name] || '' %></textarea>
+          <% } else if (f.type === 'date') { %>
+          <input type="datetime-local" name="<%= f.name %>" class="form-control" value="<%= row[f.name] ? (row[f.name].replace(' ', 'T')).substring(0,16) : '' %>">
+          <% } else { %>
+          <input type="<%= f.type || 'text' %>" name="<%= f.name %>" class="form-control" value="<%= row[f.name] || '' %>" <% if (f.required) { %>required<% } %> placeholder="请输入<%= f.label %>">
+          <% } %>
+        </div>
+        <% }) %>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 确定</button>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary ms-2">取消</a>
+      </div>
+    </form>
+  </div>
+</div>
